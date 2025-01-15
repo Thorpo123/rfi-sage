@@ -33,20 +33,58 @@ export const RFIForm = () => {
     e.preventDefault();
     
     try {
-      // TODO: Implement actual submission logic
+      // In a real application, this would be an API call
       console.log("Form submitted:", formData);
-      toast.success("RFI submitted successfully!");
       
-      // Generate Word document
-      generateWordDocument();
+      // Reset form after successful submission
+      setFormData({
+        rfiNumber: "",
+        projectName: "",
+        submittedBy: "",
+        dateSubmitted: format(new Date(), "yyyy-MM-dd"),
+        description: "",
+        dateRequiredBy: "",
+        assignedTo: "",
+        status: "Pending",
+      });
+      
+      toast.success("RFI submitted successfully!");
     } catch (error) {
+      console.error("Error submitting RFI:", error);
       toast.error("Failed to submit RFI. Please try again.");
     }
   };
 
   const generateWordDocument = () => {
-    // TODO: Implement Word document generation
-    toast.success("Word document generated successfully!");
+    try {
+      // Create a simple text representation of the RFI data
+      const documentContent = `
+RFI Number: ${formData.rfiNumber}
+Project Name: ${formData.projectName}
+Submitted By: ${formData.submittedBy}
+Date Submitted: ${formData.dateSubmitted}
+Description: ${formData.description}
+Date Required By: ${formData.dateRequiredBy}
+Assigned To: ${formData.assignedTo}
+Status: ${formData.status}
+      `.trim();
+
+      // Create a Blob containing the text content
+      const blob = new Blob([documentContent], { type: 'application/msword' });
+      
+      // Create a download link and trigger it
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = `RFI-${formData.rfiNumber}.doc`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      
+      toast.success("Word document generated successfully!");
+    } catch (error) {
+      console.error("Error generating Word document:", error);
+      toast.error("Failed to generate Word document. Please try again.");
+    }
   };
 
   return (
