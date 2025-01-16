@@ -12,17 +12,37 @@ export interface RFI {
   dateRequiredBy: string;
   assignedTo: string;
   status: "Pending" | "Received";
+  requestDetails: string;
+  documentUrl?: string;
 }
 
 const Index = () => {
   const [view, setView] = useState<"form" | "list">("list");
   const [rfis, setRfis] = useState<RFI[]>([]);
 
-  const handleRFISubmit = (rfiData: Omit<RFI, "id">) => {
+  const handleRFISubmit = (rfiData: Omit<RFI, "id" | "documentUrl">) => {
+    // Generate Word document content
+    const documentContent = `
+RFI Number: ${rfiData.rfiNumber}
+Project Name: ${rfiData.projectName}
+Submitted By: ${rfiData.submittedBy}
+Date Submitted: ${rfiData.dateSubmitted}
+Request Details: ${rfiData.requestDetails}
+Date Required By: ${rfiData.dateRequiredBy}
+Assigned To: ${rfiData.assignedTo}
+Status: ${rfiData.status}
+    `.trim();
+
+    // Create document blob and URL
+    const blob = new Blob([documentContent], { type: 'application/msword' });
+    const documentUrl = URL.createObjectURL(blob);
+
     const newRFI: RFI = {
       ...rfiData,
       id: crypto.randomUUID(),
+      documentUrl,
     };
+    
     setRfis((prev) => [...prev, newRFI]);
   };
 

@@ -8,16 +8,16 @@ import { format } from "date-fns";
 import type { RFI } from "@/pages/Index";
 
 interface RFIFormProps {
-  onSubmit: (rfiData: Omit<RFI, "id">) => void;
+  onSubmit: (rfiData: Omit<RFI, "id" | "documentUrl">) => void;
 }
 
 export const RFIForm = ({ onSubmit }: RFIFormProps) => {
-  const [formData, setFormData] = useState<Omit<RFI, "id">>({
+  const [formData, setFormData] = useState<Omit<RFI, "id" | "documentUrl">>({
     rfiNumber: "",
     projectName: "",
     submittedBy: "",
     dateSubmitted: format(new Date(), "yyyy-MM-dd"),
-    description: "",
+    requestDetails: "",
     dateRequiredBy: "",
     assignedTo: "",
     status: "Pending",
@@ -35,7 +35,7 @@ export const RFIForm = ({ onSubmit }: RFIFormProps) => {
         projectName: "",
         submittedBy: "",
         dateSubmitted: format(new Date(), "yyyy-MM-dd"),
-        description: "",
+        requestDetails: "",
         dateRequiredBy: "",
         assignedTo: "",
         status: "Pending",
@@ -45,38 +45,6 @@ export const RFIForm = ({ onSubmit }: RFIFormProps) => {
     } catch (error) {
       console.error("Error submitting RFI:", error);
       toast.error("Failed to submit RFI. Please try again.");
-    }
-  };
-
-  const generateWordDocument = () => {
-    try {
-      // Create a simple text representation of the RFI data
-      const documentContent = `
-RFI Number: ${formData.rfiNumber}
-Project Name: ${formData.projectName}
-Submitted By: ${formData.submittedBy}
-Date Submitted: ${formData.dateSubmitted}
-Description: ${formData.description}
-Date Required By: ${formData.dateRequiredBy}
-Assigned To: ${formData.assignedTo}
-Status: ${formData.status}
-      `.trim();
-
-      // Create a Blob containing the text content
-      const blob = new Blob([documentContent], { type: 'application/msword' });
-      
-      // Create a download link and trigger it
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = `RFI-${formData.rfiNumber}.doc`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      
-      toast.success("Word document generated successfully!");
-    } catch (error) {
-      console.error("Error generating Word document:", error);
-      toast.error("Failed to generate Word document. Please try again.");
     }
   };
 
@@ -154,12 +122,12 @@ Status: ${formData.status}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Request Description</Label>
+        <Label htmlFor="requestDetails">Request Details</Label>
         <Textarea
-          id="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          placeholder="Enter request description"
+          id="requestDetails"
+          value={formData.requestDetails}
+          onChange={(e) => setFormData({ ...formData, requestDetails: e.target.value })}
+          placeholder="Enter request details"
           className="min-h-[150px]"
           required
         />
@@ -168,14 +136,6 @@ Status: ${formData.status}
       <div className="flex gap-4">
         <Button type="submit" className="w-full md:w-auto">
           Submit RFI
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={generateWordDocument}
-          className="w-full md:w-auto"
-        >
-          Generate Word Document
         </Button>
       </div>
     </form>
