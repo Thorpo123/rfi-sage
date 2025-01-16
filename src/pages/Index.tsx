@@ -3,8 +3,28 @@ import { RFIForm } from "@/components/RFIForm";
 import { RFIList } from "@/components/RFIList";
 import { Button } from "@/components/ui/button";
 
+export interface RFI {
+  id: string;
+  rfiNumber: string;
+  projectName: string;
+  submittedBy: string;
+  dateSubmitted: string;
+  dateRequiredBy: string;
+  assignedTo: string;
+  status: "Pending" | "Received";
+}
+
 const Index = () => {
   const [view, setView] = useState<"form" | "list">("list");
+  const [rfis, setRfis] = useState<RFI[]>([]);
+
+  const handleRFISubmit = (rfiData: Omit<RFI, "id">) => {
+    const newRFI: RFI = {
+      ...rfiData,
+      id: crypto.randomUUID(),
+    };
+    setRfis((prev) => [...prev, newRFI]);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,7 +53,11 @@ const Index = () => {
             </div>
           </div>
 
-          {view === "form" ? <RFIForm /> : <RFIList />}
+          {view === "form" ? (
+            <RFIForm onSubmit={handleRFISubmit} />
+          ) : (
+            <RFIList rfis={rfis} />
+          )}
         </div>
       </div>
     </div>

@@ -1,43 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import type { RFI } from "@/pages/Index";
 
-interface RFI {
-  id: string;
-  rfiNumber: string;
-  projectName: string;
-  submittedBy: string;
-  dateSubmitted: string;
-  dateRequiredBy: string;
-  assignedTo: string;
-  status: "Pending" | "Received";
+interface RFIListProps {
+  rfis: RFI[];
 }
 
-// Mock data for demonstration
-const mockRFIs: RFI[] = [
-  {
-    id: "1",
-    rfiNumber: "RFI-001",
-    projectName: "City Center Project",
-    submittedBy: "John Doe",
-    dateSubmitted: "2024-04-10",
-    dateRequiredBy: "2024-04-17",
-    assignedTo: "Jane Smith",
-    status: "Pending",
-  },
-  {
-    id: "2",
-    rfiNumber: "RFI-002",
-    projectName: "Harbor Bridge",
-    submittedBy: "Mike Johnson",
-    dateSubmitted: "2024-04-09",
-    dateRequiredBy: "2024-04-16",
-    assignedTo: "Sarah Wilson",
-    status: "Received",
-  },
-];
-
-export const RFIList = () => {
+export const RFIList = ({ rfis }: RFIListProps) => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="rounded-lg border bg-card">
@@ -55,7 +25,7 @@ export const RFIList = () => {
               </tr>
             </thead>
             <tbody>
-              {mockRFIs.map((rfi) => (
+              {rfis.map((rfi) => (
                 <tr key={rfi.id} className="border-b hover:bg-muted/50 transition-colors">
                   <td className="px-4 py-3 text-sm">{rfi.rfiNumber}</td>
                   <td className="px-4 py-3 text-sm">{rfi.projectName}</td>

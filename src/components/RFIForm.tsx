@@ -5,20 +5,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import type { RFI } from "@/pages/Index";
 
-interface RFIFormData {
-  rfiNumber: string;
-  projectName: string;
-  submittedBy: string;
-  dateSubmitted: string;
-  description: string;
-  dateRequiredBy: string;
-  assignedTo: string;
-  status: "Pending" | "Received";
+interface RFIFormProps {
+  onSubmit: (rfiData: Omit<RFI, "id">) => void;
 }
 
-export const RFIForm = () => {
-  const [formData, setFormData] = useState<RFIFormData>({
+export const RFIForm = ({ onSubmit }: RFIFormProps) => {
+  const [formData, setFormData] = useState<Omit<RFI, "id">>({
     rfiNumber: "",
     projectName: "",
     submittedBy: "",
@@ -33,8 +27,7 @@ export const RFIForm = () => {
     e.preventDefault();
     
     try {
-      // In a real application, this would be an API call
-      console.log("Form submitted:", formData);
+      onSubmit(formData);
       
       // Reset form after successful submission
       setFormData({
