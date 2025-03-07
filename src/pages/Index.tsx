@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { RFIForm } from "@/components/RFIForm";
 import { RFIList } from "@/components/RFIList";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,14 @@ export interface RFI {
 const Index = () => {
   const [view, setView] = useState<"form" | "list">("list");
   const [rfis, setRfis] = useState<RFI[]>([]);
+  const [objectUrls, setObjectUrls] = useState<string[]>([]);
+
+  // Clean up object URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [objectUrls]);
 
   const handleRFISubmit = (rfiData: Omit<RFI, "id" | "documentUrl">) => {
     // Generate Word document content
@@ -36,6 +45,9 @@ Status: ${rfiData.status}
     // Create document blob and URL
     const blob = new Blob([documentContent], { type: 'application/msword' });
     const documentUrl = URL.createObjectURL(blob);
+    
+    // Store the URL for cleanup
+    setObjectUrls(prev => [...prev, documentUrl]);
 
     const newRFI: RFI = {
       ...rfiData,

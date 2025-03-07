@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -16,6 +17,8 @@ export const RFIList = ({ rfis }: RFIListProps) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
+    // Note: We don't revoke the URL here as it's managed by the parent component
   };
 
   return (
