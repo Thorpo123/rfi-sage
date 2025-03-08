@@ -3,13 +3,17 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
+console.log("Script is loading");
+
 // Error boundary for the entire app
 const renderApp = () => {
   try {
+    console.log("Attempting to render app");
+    
     const rootElement = document.getElementById("root");
     if (!rootElement) {
       console.error("Root element not found");
-      document.body.innerHTML = '<div style="padding: 20px; color: red;"><h1>Error: Root element not found</h1></div>';
+      document.body.innerHTML = '<div style="padding: 20px; color: red;"><h1>Error: Root element not found</h1><p>Check the console for more details.</p></div>';
       return;
     }
     
@@ -24,6 +28,7 @@ const renderApp = () => {
       <div style="padding: 20px; color: red;">
         <h1>Error Loading Application</h1>
         <pre>${error instanceof Error ? error.message : String(error)}</pre>
+        <p>Check the console for more details.</p>
       </div>
     `;
   }
@@ -52,4 +57,5 @@ window.addEventListener('unhandledrejection', (event) => {
   `;
 });
 
-renderApp();
+// Execute with a small delay to ensure DOM is fully loaded
+setTimeout(renderApp, 100);

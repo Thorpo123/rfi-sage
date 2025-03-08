@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "./", // Add this line to ensure assets are loaded correctly with relative paths
+  base: "", // Empty string to use relative paths
   plugins: [
     react(),
     mode === 'development' &&
@@ -26,5 +26,6 @@ export default defineConfig(({ mode }) => ({
     sourcemap: true,
     minify: true,
     assetsDir: "assets",
+    emptyOutDir: true,
   },
 }));
