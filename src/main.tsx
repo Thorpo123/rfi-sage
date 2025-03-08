@@ -9,6 +9,7 @@ const renderApp = () => {
     const rootElement = document.getElementById("root");
     if (!rootElement) {
       console.error("Root element not found");
+      document.body.innerHTML = '<div style="padding: 20px; color: red;"><h1>Error: Root element not found</h1></div>';
       return;
     }
     
@@ -27,5 +28,28 @@ const renderApp = () => {
     `;
   }
 };
+
+// Add window error handler
+window.addEventListener('error', (event) => {
+  console.error('Global error:', event.error);
+  document.body.innerHTML += `
+    <div style="padding: 20px; color: red; border: 1px solid red; margin-top: 20px;">
+      <h2>Runtime Error</h2>
+      <p>${event.message}</p>
+      <p>At: ${event.filename}:${event.lineno}:${event.colno}</p>
+    </div>
+  `;
+});
+
+// Add unhandled promise rejection handler
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+  document.body.innerHTML += `
+    <div style="padding: 20px; color: red; border: 1px solid red; margin-top: 20px;">
+      <h2>Unhandled Promise Rejection</h2>
+      <p>${String(event.reason)}</p>
+    </div>
+  `;
+});
 
 renderApp();
