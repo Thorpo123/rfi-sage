@@ -17,7 +17,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  console.log("App component rendering");
+  console.log("App component rendering with HashRouter");
   
   return (
     <QueryClientProvider client={queryClient}>
